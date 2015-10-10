@@ -1,9 +1,12 @@
 -module(c_monotonic_time).
 
--export([init/0, now/0]).
+-export([init/0, microseconds/0, milliseconds/0]).
 -on_load(init/0).
 
-now() ->
+microseconds() ->
+      "NIF library not loaded".
+
+milliseconds() ->
       "NIF library not loaded".
 
 init() ->

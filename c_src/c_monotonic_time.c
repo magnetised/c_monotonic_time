@@ -98,10 +98,6 @@ int clock_gettime(clockid_t clk_id, struct timespec *tp) {
 
 	uint64_t start, end, delta, nano;
 
-	task_basic_info_data_t tinfo;
-	task_thread_times_info_data_t ttinfo;
-	mach_msg_type_number_t tflag;
-
 	int retval = -1;
 	switch (clk_id) {
 		case CLOCK_REALTIME:
@@ -147,15 +143,22 @@ int clock_gettime(clockid_t clk_id, struct timespec *tp) {
 
 struct timespec ts;
 
-static ERL_NIF_TERM now(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
+static ERL_NIF_TERM microseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    return enif_make_uint64(env, (ts.tv_sec * (uint64_t)1000000) + (ts.tv_nsec/1000.0));
+    return enif_make_uint64(env, (ts.tv_sec * (uint64_t)1000000) + (uint64_t)(ts.tv_nsec/1000.0));
+}
+
+static ERL_NIF_TERM milliseconds(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
+{
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return enif_make_uint64(env, (ts.tv_sec * (uint64_t)1000) + (uint64_t)(ts.tv_nsec/1000000.0));
 }
 
 static ErlNifFunc nif_funcs[] =
 {
-    {"now", 0, now}
+    {"milliseconds", 0, milliseconds},
+    {"microseconds", 0, microseconds}
 };
 
 ERL_NIF_INIT(c_monotonic_time, nif_funcs, NULL, NULL, NULL, NULL)
