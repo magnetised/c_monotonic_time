@@ -82,12 +82,15 @@
 #include <unistd.h>
 #include <sched.h>
 
+#ifndef CLOCK_REALTIME
+// latest macos now has a CLOCK_REALTIME defined
 typedef enum {
 	CLOCK_REALTIME,
 	CLOCK_MONOTONIC,
 	CLOCK_PROCESS_CPUTIME_ID,
 	CLOCK_THREAD_CPUTIME_ID
 } clockid_t;
+#endif
 
 static mach_timebase_info_data_t __clock_gettime_inf;
 

@@ -1,2 +1,4 @@
 priv
 .rebar
+c_src/c_monotonic_time.o
+c_src/c_monotonic_time.d
